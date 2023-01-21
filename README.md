@@ -1,3 +1,11 @@
+Install Bitcoin + Counterparty with the following command:
+
+`fednode install`
+
+It will automatically choose CONFIG:base BRANCH:master.
+
+---
+
 [![Slack Status](http://slack.counterparty.io/badge.svg)](http://slack.counterparty.io)
 
 **All-in-one Counterparty Federated Node Build System (`federatednode`)**
