@@ -2,7 +2,16 @@ Install Bitcoin + Counterparty with the following command:
 
 `fednode install`
 
-It will automatically choose CONFIG:base BRANCH:master.
+This installs a docker based manager for the minimal services required to have a Counterparty node.
+
+The main differences between this 'Core Version' setup vs. the "[official](https://counterparty.io/docs/federated_node/)" are:
+
+- [Branced off](https://github.com/CNTRPRTY/federatednode/tree/counterpartyxcp_master) before the addition of non-required services to the 'base' configuration
+- Also takes the opportunity to:
+  - Defaults to CONFIG:base BRANCH:master
+  - Makes the `--no-bootstrap` option default (Don't trust, verify)
+  - Installs v0.21.1 of Bitcoin Core
+  - Other security improvements (see [commits](https://github.com/CNTRPRTY/federatednode/commits/master))
 
 ---
 
