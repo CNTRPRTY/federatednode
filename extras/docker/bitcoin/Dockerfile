@@ -1,6 +1,7 @@
 # FROM counterparty/base
 
-FROM ubuntu:16.04
+FROM ubuntu:22.04
+# FROM ubuntu:16.04
 
 MAINTAINER Counterparty Developers <dev@counterparty.io>
 
