@@ -30,7 +30,8 @@ REPO_BASE_HTTPS = "https://github.com/CounterpartyXCP/{}.git"
 REPO_BASE_SSH = "git@github.com:CounterpartyXCP/{}.git"
 REPOS_BASE = ['counterparty-lib', 'counterparty-cli', 'addrindexrs']
 REPOS_COUNTERBLOCK = REPOS_BASE + ['counterblock', ]
-REPOS_FULL = REPOS_COUNTERBLOCK + ['counterwallet', 'armory-utxsvr', 'xcp-proxy']
+REPOS_FULL = REPOS_COUNTERBLOCK + ['armory-utxsvr', 'xcp-proxy']
+# REPOS_FULL = REPOS_COUNTERBLOCK + ['counterwallet', 'armory-utxsvr', 'xcp-proxy']
 
 HOST_PORTS_USED = {
     'base': [8332, 18332, 8432, 18432, 4000, 14000],
@@ -46,8 +47,12 @@ VOLUMES_USED = {
 }
 UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
                   'counterparty', 'counterparty-testnet', 'counterblock',
-                  'counterblock-testnet', 'counterwallet', 'armory-utxsvr',
+                  'counterblock-testnet', 'armory-utxsvr',
                   'armory-utxsvr-testnet', 'xcp-proxy', 'xcp-proxy-testnet']
+# UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
+#                   'counterparty', 'counterparty-testnet', 'counterblock',
+#                   'counterblock-testnet', 'counterwallet', 'armory-utxsvr',
+#                   'armory-utxsvr-testnet', 'xcp-proxy', 'xcp-proxy-testnet']
 REPARSE_CHOICES = ['counterparty', 'counterparty-testnet', 'counterblock', 'counterblock-testnet']
 ROLLBACK_CHOICES = ['counterparty', 'counterparty-testnet']
 VALIDATE_CHOICES = ['counterparty', 'counterparty-testnet']
@@ -460,16 +465,16 @@ def main():
                             else:
                                 shutil.rmtree(path)
 
-                if service_base == 'counterwallet' and os.path.exists(os.path.join(SCRIPTDIR, "src", "counterwallet")):  # special case
-                    transifex_cfg_path = os.path.join(os.path.expanduser("~"), ".transifex")
-                    if os.path.exists(transifex_cfg_path):
-                        os.system("{} docker cp {} federatednode_counterwallet_1:/root/.transifex".format(SUDO_CMD, transifex_cfg_path))
-                    os.system("{} docker exec -i -t federatednode_counterwallet_1 bash -c \"cd /counterwallet/src ".format(SUDO_CMD) +
-                              "&& bower --allow-root update && cd /counterwallet && npm update && grunt build\"")
-                    if not os.path.exists(transifex_cfg_path):
-                        print("NOTE: Did not update locales because there is no .transifex file in your home directory")
-                        print("If you want locales compiled, sign up for transifex and create this file to" +
-                              " contain 'your_transifex_username:your_transifex_password'")
+                # if service_base == 'counterwallet' and os.path.exists(os.path.join(SCRIPTDIR, "src", "counterwallet")):  # special case
+                #     transifex_cfg_path = os.path.join(os.path.expanduser("~"), ".transifex")
+                #     if os.path.exists(transifex_cfg_path):
+                #         os.system("{} docker cp {} federatednode_counterwallet_1:/root/.transifex".format(SUDO_CMD, transifex_cfg_path))
+                #     os.system("{} docker exec -i -t federatednode_counterwallet_1 bash -c \"cd /counterwallet/src ".format(SUDO_CMD) +
+                #               "&& bower --allow-root update && cd /counterwallet && npm update && grunt build\"")
+                #     if not os.path.exists(transifex_cfg_path):
+                #         print("NOTE: Did not update locales because there is no .transifex file in your home directory")
+                #         print("If you want locales compiled, sign up for transifex and create this file to" +
+                #               " contain 'your_transifex_username:your_transifex_password'")
 
             # and restart container
             if not args.no_restart:

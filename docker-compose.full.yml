@@ -83,14 +83,14 @@ services:
       - redis
       - armory-utxsvr-testnet
 
-  counterwallet:
-    extends:
-      file: docker-compose.tmpl.yml
-      service: counterwallet-base
-    links:
-      - redis
-      - counterblock
-      - counterblock-testnet
+  # counterwallet:
+  #   extends:
+  #     file: docker-compose.tmpl.yml
+  #     service: counterwallet-base
+  #   links:
+  #     - redis
+  #     - counterblock
+  #     - counterblock-testnet
 
   xcp-proxy:
     extends:

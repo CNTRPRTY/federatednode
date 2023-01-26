@@ -178,21 +178,21 @@ services:
       - RPC_HOST=0.0.0.0
       - PARAMS=--testnet
 
-  counterwallet-base:
-    hostname: ${HOSTNAME_BASE}-cw
-    build:
-      context: ./src/counterwallet
-    volumes:
-      - ./config/counterwallet/ssl:/ssl_config
-      - counterblock-data:/counterblock_data
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "30m"
-        max-file: "30"
-    ports:
-      - "80:80"
-      - "443:443"
+  # counterwallet-base:
+  #   hostname: ${HOSTNAME_BASE}-cw
+  #   build:
+  #     context: ./src/counterwallet
+  #   volumes:
+  #     - ./config/counterwallet/ssl:/ssl_config
+  #     - counterblock-data:/counterblock_data
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "30m"
+  #       max-file: "30"
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
 
   mongodb-base:
     hostname: ${HOSTNAME_BASE}-mongo
