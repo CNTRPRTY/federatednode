@@ -1,2 +1,3 @@
 *.conf
 !redis/redis.conf
+!http-addrindexrs/*.conf
