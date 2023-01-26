@@ -39,6 +39,8 @@ HOST_PORTS_USED = {
     'base': [8332, 18332, 8432, 18432, 4000, 14000],
     'base_extbtc': [8432, 18432, 4000, 14000],
     # 'counterblock': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 27017],
+    
+    # TODO some ports might not be needed (were from counterblock/counterwallet)
     'full': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 80, 443, 27017]
 }
 VOLUMES_USED = {
