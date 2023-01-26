@@ -3,7 +3,7 @@
 FROM ubuntu:22.04
 # FROM ubuntu:16.04
 
-MAINTAINER Counterparty Developers <dev@counterparty.io>
+# MAINTAINER Counterparty Developers <dev@counterparty.io>
 
 # Install common dependencies
 RUN apt-get update && apt-get install -y apt-utils ca-certificates wget curl git mercurial \
