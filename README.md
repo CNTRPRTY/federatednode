@@ -2,7 +2,7 @@ Install Bitcoin + Counterparty with the following command:
 
 `fednode install`
 
-This installs a docker based manager for the minimal services required to have a Counterparty node.
+This installs a docker based manager for the minimal services required to have a Bitcoin + Counterparty node.
 
 The main differences between this 'Core Version' setup vs. the "[official](https://counterparty.io/docs/federated_node/)" are:
 
@@ -13,6 +13,8 @@ The main differences between this 'Core Version' setup vs. the "[official](https
   - Installs v0.21.1 of Bitcoin Core
   - Security improvements
   - (see [commits](https://github.com/CNTRPRTY/federatednode/commits/master), verify)
+
+This fednode software is used by [xcp.dev](https://www.xcp.dev/) ([DIY](https://github.com/CNTRPRTY/xcpdev/tree/main/server/fednode)).
 
 ---
 
