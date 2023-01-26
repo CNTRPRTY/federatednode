@@ -176,7 +176,8 @@ def write_config(config):
 def run_compose_cmd(cmd):
     assert DOCKER_CONFIG_PATH
     assert os.environ['FEDNODE_RELEASE_TAG']
-    return os.system("{} docker-compose -f {} -p {} {}".format(SUDO_CMD, DOCKER_CONFIG_PATH, PROJECT_NAME, cmd))
+    return os.system("{} docker compose -f {} -p {} {}".format(SUDO_CMD, DOCKER_CONFIG_PATH, PROJECT_NAME, cmd))
+    # return os.system("{} docker-compose -f {} -p {} {}".format(SUDO_CMD, DOCKER_CONFIG_PATH, PROJECT_NAME, cmd))
 
 
 def is_port_open(port):
