@@ -402,7 +402,8 @@ def main():
     elif args.command == 'logs':
         run_compose_cmd("logs {}".format(' '.join(args.services)))
     elif args.command == 'ps':
-        run_compose_cmd("ps")
+        run_compose_cmd("ps --all")
+        # run_compose_cmd("ps")
     elif args.command == 'exec':
         if len(args.cmd) == 1 and re.match("['\"].*?['\"]", args.cmd[0]):
             cmd = args.cmd
