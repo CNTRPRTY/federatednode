@@ -10,7 +10,7 @@ The main differences between this 'Core Version' setup vs. the "[official](https
 - Also takes the opportunity to:
   - Defaults to CONFIG:base BRANCH:master
   - Makes the `--no-bootstrap` option default (Don't trust, verify)
-  - Installs v0.21.1 of Bitcoin Core
+  - Installs v0.21.0 of Bitcoin Core (but [easy](https://github.com/CNTRPRTY/federatednode/blob/master/extras/docker/bitcoin/Dockerfile#L27) to change to your preferred version)
   - Security improvements
   - (see [commits](https://github.com/CNTRPRTY/federatednode/commits/master), verify)
 
