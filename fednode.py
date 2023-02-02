@@ -49,8 +49,7 @@ VOLUMES_USED = {
     # 'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
 }
 UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
-                  'counterparty', 'counterparty-testnet', 'armory-utxsvr',
-                  'armory-utxsvr-testnet']
+                  'counterparty', 'counterparty-testnet']
 # UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
 #                   'counterparty', 'counterparty-testnet', 'counterblock',
 #                   'counterblock-testnet', 'counterwallet', 'armory-utxsvr',
@@ -464,7 +463,7 @@ def main():
                         os.system(git_cmd)
 
                     # delete installed egg (to force egg recreate and deps re-check on next start)
-                    if service_base in ('counterparty', 'armory-utxsvr'):
+                    if service_base in ('counterparty'):
                     # if service_base in ('counterparty', 'counterblock', 'armory-utxsvr'):
                         for path in glob.glob(os.path.join(service_dir_path, "*.egg-info")):
                             print("Removing egg path {}".format(path))

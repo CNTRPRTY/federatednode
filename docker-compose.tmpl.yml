@@ -149,34 +149,34 @@ services:
   #   environment:
   #     - PARAMS=--config-file=/root/.config/counterblock/server.testnet.conf
 
-  armory-utxsvr-base:
-    image: counterparty/armory-utxsvr:${FEDNODE_RELEASE_TAG}
-    volumes:
-      - ./src/armory-utxsvr:/armory-utxsvr
-      - armory-data:/root/.armory
-      - bitcoin-data:/root/.bitcoin/
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "30m"
-        max-file: "30"
+  # armory-utxsvr-base:
+  #   image: counterparty/armory-utxsvr:${FEDNODE_RELEASE_TAG}
+  #   volumes:
+  #     - ./src/armory-utxsvr:/armory-utxsvr
+  #     - armory-data:/root/.armory
+  #     - bitcoin-data:/root/.bitcoin/
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "30m"
+  #       max-file: "30"
 
-  armory-utxsvr-base-mainnet:
-    hostname: ${HOSTNAME_BASE}-amry
-    extends:
-      service: armory-utxsvr-base
-    environment:
-      - BITCOIND_URL=http://rpc:rpc@bitcoin:8332
-      - RPC_HOST=0.0.0.0
+  # armory-utxsvr-base-mainnet:
+  #   hostname: ${HOSTNAME_BASE}-amry
+  #   extends:
+  #     service: armory-utxsvr-base
+  #   environment:
+  #     - BITCOIND_URL=http://rpc:rpc@bitcoin:8332
+  #     - RPC_HOST=0.0.0.0
 
-  armory-utxsvr-base-testnet:
-    hostname: ${HOSTNAME_BASE}-amry-t
-    extends:
-      service: armory-utxsvr-base
-    environment:
-      - BITCOIND_URL=http://rpc:rpc@bitcoin-testnet:18332
-      - RPC_HOST=0.0.0.0
-      - PARAMS=--testnet
+  # armory-utxsvr-base-testnet:
+  #   hostname: ${HOSTNAME_BASE}-amry-t
+  #   extends:
+  #     service: armory-utxsvr-base
+  #   environment:
+  #     - BITCOIND_URL=http://rpc:rpc@bitcoin-testnet:18332
+  #     - RPC_HOST=0.0.0.0
+  #     - PARAMS=--testnet
 
   # counterwallet-base:
   #   hostname: ${HOSTNAME_BASE}-cw
