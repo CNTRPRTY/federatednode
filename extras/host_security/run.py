@@ -55,6 +55,7 @@ def do_security_setup():
     # sysctl
     runcmd("install -m 0644 -o root -g root -D %s/sysctl_rules.conf /etc/sysctl.d/60-tweaks.conf" % DIST_PATH)
 
+    # TODO? counterblock removed
     # set up fail2ban
     runcmd("apt-get -y install fail2ban")
     runcmd("install -m 0644 -o root -g root -D %s/fail2ban.jail.conf /etc/fail2ban/jail.d/counterblock.conf" % DIST_PATH)
@@ -86,6 +87,7 @@ def do_security_setup():
     # apparmor
     runcmd("apt-get -y install apparmor apparmor-profiles")
 
+    # TODO? counterblock removed
     # auditd
     # note that auditd will need a reboot to fully apply the rules, due to it operating in "immutable mode" by default
     runcmd("apt-get -y install auditd audispd-plugins")

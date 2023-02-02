@@ -31,26 +31,32 @@ REPO_BASE_HTTPS = "https://github.com/CNTRPRTY/{}.git"
 REPO_BASE_SSH = "git@github.com:CNTRPRTY/{}.git"
 # REPO_BASE_SSH = "git@github.com:CounterpartyXCP/{}.git"
 REPOS_BASE = ['counterparty-lib', 'counterparty-cli', 'addrindexrs']
-REPOS_COUNTERBLOCK = REPOS_BASE + ['counterblock', ]
-REPOS_FULL = REPOS_COUNTERBLOCK + ['counterwallet', 'armory-utxsvr', 'xcp-proxy']
+# REPOS_COUNTERBLOCK = REPOS_BASE + ['counterblock', ]
+REPOS_FULL = REPOS_BASE + ['armory-utxsvr', 'xcp-proxy']
+# REPOS_FULL = REPOS_COUNTERBLOCK + ['counterwallet', 'armory-utxsvr', 'xcp-proxy']
 
 HOST_PORTS_USED = {
     'base': [8332, 18332, 8432, 18432, 4000, 14000],
     'base_extbtc': [8432, 18432, 4000, 14000],
-    'counterblock': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 27017],
+    # 'counterblock': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 27017],
     'full': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 80, 443, 27017]
 }
 VOLUMES_USED = {
     'base': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data'],
     'base_extbtc': ['addrindexrs-data', 'counterparty-data'],
-    'counterblock': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data'],
-    'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
+    # 'counterblock': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data'],
+    'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
+    # 'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
 }
 UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
-                  'counterparty', 'counterparty-testnet', 'counterblock',
-                  'counterblock-testnet', 'counterwallet', 'armory-utxsvr',
+                  'counterparty', 'counterparty-testnet', 'armory-utxsvr',
                   'armory-utxsvr-testnet', 'xcp-proxy', 'xcp-proxy-testnet']
-REPARSE_CHOICES = ['counterparty', 'counterparty-testnet', 'counterblock', 'counterblock-testnet']
+# UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
+#                   'counterparty', 'counterparty-testnet', 'counterblock',
+#                   'counterblock-testnet', 'counterwallet', 'armory-utxsvr',
+#                   'armory-utxsvr-testnet', 'xcp-proxy', 'xcp-proxy-testnet']
+REPARSE_CHOICES = ['counterparty', 'counterparty-testnet']
+# REPARSE_CHOICES = ['counterparty', 'counterparty-testnet', 'counterblock', 'counterblock-testnet']
 ROLLBACK_CHOICES = ['counterparty', 'counterparty-testnet']
 VALIDATE_CHOICES = ['counterparty', 'counterparty-testnet']
 VACUUM_CHOICES = ['counterparty', 'counterparty-testnet']
@@ -74,15 +80,16 @@ CONFIGCHECK_FILES_BASE = [
     ['counterparty', 'server.conf.default', 'server.conf'],
     ['counterparty', 'server.testnet.conf.default', 'server.testnet.conf'],
 ];
-CONFIGCHECK_FILES_COUNTERBLOCK = CONFIGCHECK_FILES_BASE + [
-    ['counterblock', 'server.conf.default', 'server.conf'],
-    ['counterblock', 'server.testnet.conf.default', 'server.testnet.conf'],
-]
-CONFIGCHECK_FILES_FULL = CONFIGCHECK_FILES_COUNTERBLOCK;
+# CONFIGCHECK_FILES_COUNTERBLOCK = CONFIGCHECK_FILES_BASE + [
+#     ['counterblock', 'server.conf.default', 'server.conf'],
+#     ['counterblock', 'server.testnet.conf.default', 'server.testnet.conf'],
+# ]
+CONFIGCHECK_FILES_FULL = CONFIGCHECK_FILES_BASE;
+# CONFIGCHECK_FILES_FULL = CONFIGCHECK_FILES_COUNTERBLOCK;
 CONFIGCHECK_FILES = {
     'base_extbtc': CONFIGCHECK_FILES_BASE_EXTERNAL_BITCOIN,
     'base': CONFIGCHECK_FILES_BASE,
-    'counterblock': CONFIGCHECK_FILES_COUNTERBLOCK,
+    # 'counterblock': CONFIGCHECK_FILES_COUNTERBLOCK,
     'full': CONFIGCHECK_FILES_FULL,
 }
 # set in setup_env()
@@ -103,7 +110,7 @@ def parse_args():
     subparsers.required = True
 
     parser_install = subparsers.add_parser('install', help="install fednode services")
-    parser_install.add_argument("config", nargs="?", default="base", choices=['base', 'base_extbtc', 'counterblock', 'full'], help="The name of the service configuration to utilize")
+    parser_install.add_argument("config", nargs="?", default="base", choices=['base', 'base_extbtc', 'full'], help="The name of the service configuration to utilize")
     parser_install.add_argument("branch", nargs="?", default="master", choices=['master', 'develop'], help="The name of the git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags)")
     # parser_install.add_argument("config", choices=['base', 'base_extbtc', 'counterblock', 'full'], help="The name of the service configuration to utilize")
     # parser_install.add_argument("branch", choices=['master', 'develop'], help="The name of the git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags)")
@@ -124,7 +131,8 @@ def parse_args():
     parser_restart = subparsers.add_parser('restart', help="restart fednode services")
     parser_restart.add_argument("services", nargs='*', default='', help="The service or services to restart (or blank for all services)")
 
-    parser_reparse = subparsers.add_parser('reparse', help="reparse a counterparty-server or counterblock service")
+    parser_reparse = subparsers.add_parser('reparse', help="reparse a counterparty-server service")
+    # parser_reparse = subparsers.add_parser('reparse', help="reparse a counterparty-server or counterblock service")
     parser_reparse.add_argument("service", choices=REPARSE_CHOICES, help="The name of the service for which to kick off a reparse")
 
     parser_rollback = subparsers.add_parser('rollback', help="rollback a counterparty-server")
@@ -334,7 +342,8 @@ def main():
                 sys.exit(1)
 
         # check out the necessary source trees (don't use submodules due to detached HEAD and other problems)
-        REPOS = REPOS_BASE if build_config == 'base' else (REPOS_COUNTERBLOCK if build_config == 'counterblock' else REPOS_FULL)
+        REPOS = REPOS_BASE if build_config == 'base' else REPOS_FULL
+        # REPOS = REPOS_BASE if build_config == 'base' else (REPOS_COUNTERBLOCK if build_config == 'counterblock' else REPOS_FULL)
         for repo in REPOS:
             repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
             repo_dir = os.path.join(SCRIPTDIR, "src", repo)
@@ -454,7 +463,8 @@ def main():
                         os.system(git_cmd)
 
                     # delete installed egg (to force egg recreate and deps re-check on next start)
-                    if service_base in ('counterparty', 'counterblock', 'armory-utxsvr'):
+                    if service_base in ('counterparty', 'armory-utxsvr'):
+                    # if service_base in ('counterparty', 'counterblock', 'armory-utxsvr'):
                         for path in glob.glob(os.path.join(service_dir_path, "*.egg-info")):
                             print("Removing egg path {}".format(path))
                             if not IS_WINDOWS:  # have to use root
@@ -462,16 +472,16 @@ def main():
                             else:
                                 shutil.rmtree(path)
 
-                if service_base == 'counterwallet' and os.path.exists(os.path.join(SCRIPTDIR, "src", "counterwallet")):  # special case
-                    transifex_cfg_path = os.path.join(os.path.expanduser("~"), ".transifex")
-                    if os.path.exists(transifex_cfg_path):
-                        os.system("{} docker cp {} federatednode_counterwallet_1:/root/.transifex".format(SUDO_CMD, transifex_cfg_path))
-                    os.system("{} docker exec -i -t federatednode_counterwallet_1 bash -c \"cd /counterwallet/src ".format(SUDO_CMD) +
-                              "&& bower --allow-root update && cd /counterwallet && npm update && grunt build\"")
-                    if not os.path.exists(transifex_cfg_path):
-                        print("NOTE: Did not update locales because there is no .transifex file in your home directory")
-                        print("If you want locales compiled, sign up for transifex and create this file to" +
-                              " contain 'your_transifex_username:your_transifex_password'")
+                # if service_base == 'counterwallet' and os.path.exists(os.path.join(SCRIPTDIR, "src", "counterwallet")):  # special case
+                #     transifex_cfg_path = os.path.join(os.path.expanduser("~"), ".transifex")
+                #     if os.path.exists(transifex_cfg_path):
+                #         os.system("{} docker cp {} federatednode_counterwallet_1:/root/.transifex".format(SUDO_CMD, transifex_cfg_path))
+                #     os.system("{} docker exec -i -t federatednode_counterwallet_1 bash -c \"cd /counterwallet/src ".format(SUDO_CMD) +
+                #               "&& bower --allow-root update && cd /counterwallet && npm update && grunt build\"")
+                #     if not os.path.exists(transifex_cfg_path):
+                #         print("NOTE: Did not update locales because there is no .transifex file in your home directory")
+                #         print("If you want locales compiled, sign up for transifex and create this file to" +
+                #               " contain 'your_transifex_username:your_transifex_password'")
 
             # and restart container
             if not args.no_restart:

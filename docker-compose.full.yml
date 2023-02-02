@@ -61,36 +61,36 @@ services:
     links:
       - bitcoin-testnet
 
-  counterblock:
-    extends:
-      file: docker-compose.tmpl.yml
-      service: counterblock-base-mainnet
-    links:
-      - bitcoin
-      - counterparty
-      - mongodb
-      - redis
-      - armory-utxsvr
+  # counterblock:
+  #   extends:
+  #     file: docker-compose.tmpl.yml
+  #     service: counterblock-base-mainnet
+  #   links:
+  #     - bitcoin
+  #     - counterparty
+  #     - mongodb
+  #     - redis
+  #     - armory-utxsvr
 
-  counterblock-testnet:
-    extends:
-      file: docker-compose.tmpl.yml
-      service: counterblock-base-testnet
-    links:
-      - bitcoin-testnet
-      - counterparty-testnet
-      - mongodb
-      - redis
-      - armory-utxsvr-testnet
+  # counterblock-testnet:
+  #   extends:
+  #     file: docker-compose.tmpl.yml
+  #     service: counterblock-base-testnet
+  #   links:
+  #     - bitcoin-testnet
+  #     - counterparty-testnet
+  #     - mongodb
+  #     - redis
+  #     - armory-utxsvr-testnet
 
-  counterwallet:
-    extends:
-      file: docker-compose.tmpl.yml
-      service: counterwallet-base
-    links:
-      - redis
-      - counterblock
-      - counterblock-testnet
+  # counterwallet:
+  #   extends:
+  #     file: docker-compose.tmpl.yml
+  #     service: counterwallet-base
+  #   links:
+  #     - redis
+  #     - counterblock
+  #     - counterblock-testnet
 
   xcp-proxy:
     extends:
@@ -114,6 +114,6 @@ volumes:
   bitcoin-data:
   addrindexrs-data:
   counterparty-data:
-  counterblock-data:
+  # counterblock-data:
   mongodb-data:
   armory-data:
