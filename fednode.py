@@ -32,20 +32,20 @@ REPO_BASE_SSH = "git@github.com:CNTRPRTY/{}.git"
 # REPO_BASE_SSH = "git@github.com:CounterpartyXCP/{}.git"
 REPOS_BASE = ['counterparty-lib', 'counterparty-cli', 'addrindexrs']
 # REPOS_COUNTERBLOCK = REPOS_BASE + ['counterblock', ]
-REPOS_FULL = REPOS_BASE + ['armory-utxsvr', 'xcp-proxy']
+# REPOS_FULL = REPOS_BASE + ['armory-utxsvr', 'xcp-proxy']
 # REPOS_FULL = REPOS_COUNTERBLOCK + ['counterwallet', 'armory-utxsvr', 'xcp-proxy']
 
 HOST_PORTS_USED = {
     'base': [8332, 18332, 8432, 18432, 4000, 14000],
     'base_extbtc': [8432, 18432, 4000, 14000],
     # 'counterblock': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 27017],
-    'full': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 80, 443, 27017]
+    # 'full': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 80, 443, 27017]
 }
 VOLUMES_USED = {
     'base': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data'],
     'base_extbtc': ['addrindexrs-data', 'counterparty-data'],
     # 'counterblock': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data'],
-    'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
+    # 'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
     # 'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
 }
 UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
@@ -84,13 +84,13 @@ CONFIGCHECK_FILES_BASE = [
 #     ['counterblock', 'server.conf.default', 'server.conf'],
 #     ['counterblock', 'server.testnet.conf.default', 'server.testnet.conf'],
 # ]
-CONFIGCHECK_FILES_FULL = CONFIGCHECK_FILES_BASE;
+# CONFIGCHECK_FILES_FULL = CONFIGCHECK_FILES_BASE;
 # CONFIGCHECK_FILES_FULL = CONFIGCHECK_FILES_COUNTERBLOCK;
 CONFIGCHECK_FILES = {
     'base_extbtc': CONFIGCHECK_FILES_BASE_EXTERNAL_BITCOIN,
     'base': CONFIGCHECK_FILES_BASE,
     # 'counterblock': CONFIGCHECK_FILES_COUNTERBLOCK,
-    'full': CONFIGCHECK_FILES_FULL,
+    # 'full': CONFIGCHECK_FILES_FULL,
 }
 # set in setup_env()
 IS_WINDOWS = None
@@ -110,7 +110,7 @@ def parse_args():
     subparsers.required = True
 
     parser_install = subparsers.add_parser('install', help="install fednode services")
-    parser_install.add_argument("config", nargs="?", default="base", choices=['base', 'base_extbtc', 'full'], help="The name of the service configuration to utilize")
+    parser_install.add_argument("config", nargs="?", default="base", choices=['base', 'base_extbtc'], help="The name of the service configuration to utilize")
     parser_install.add_argument("branch", nargs="?", default="master", choices=['master', 'develop'], help="The name of the git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags)")
     # parser_install.add_argument("config", choices=['base', 'base_extbtc', 'counterblock', 'full'], help="The name of the service configuration to utilize")
     # parser_install.add_argument("branch", choices=['master', 'develop'], help="The name of the git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags)")
@@ -342,7 +342,7 @@ def main():
                 sys.exit(1)
 
         # check out the necessary source trees (don't use submodules due to detached HEAD and other problems)
-        REPOS = REPOS_BASE if build_config == 'base' else REPOS_FULL
+        REPOS = REPOS_BASE
         # REPOS = REPOS_BASE if build_config == 'base' else (REPOS_COUNTERBLOCK if build_config == 'counterblock' else REPOS_FULL)
         for repo in REPOS:
             repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
