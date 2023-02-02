@@ -37,10 +37,10 @@ services:
       - bitcoin-testnet
       - addrindexrs-testnet
 
-  mongodb:
-    extends:
-      file: docker-compose.tmpl.yml
-      service: mongodb-base
+  # mongodb:
+  #   extends:
+  #     file: docker-compose.tmpl.yml
+  #     service: mongodb-base
 
   redis:
     extends:
@@ -115,5 +115,5 @@ volumes:
   addrindexrs-data:
   counterparty-data:
   # counterblock-data:
-  mongodb-data:
+  # mongodb-data:
   armory-data:
