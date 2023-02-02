@@ -50,7 +50,7 @@ VOLUMES_USED = {
 }
 UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
                   'counterparty', 'counterparty-testnet', 'armory-utxsvr',
-                  'armory-utxsvr-testnet', 'xcp-proxy', 'xcp-proxy-testnet']
+                  'armory-utxsvr-testnet']
 # UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
 #                   'counterparty', 'counterparty-testnet', 'counterblock',
 #                   'counterblock-testnet', 'counterwallet', 'armory-utxsvr',
@@ -60,7 +60,8 @@ REPARSE_CHOICES = ['counterparty', 'counterparty-testnet']
 ROLLBACK_CHOICES = ['counterparty', 'counterparty-testnet']
 VALIDATE_CHOICES = ['counterparty', 'counterparty-testnet']
 VACUUM_CHOICES = ['counterparty', 'counterparty-testnet']
-SHELL_CHOICES = UPDATE_CHOICES + ['mongodb', 'redis', 'bitcoin', 'bitcoin-testnet', 'addrindexrs', 'addrindexrs-testnet']
+SHELL_CHOICES = UPDATE_CHOICES + ['bitcoin', 'bitcoin-testnet', 'addrindexrs', 'addrindexrs-testnet']
+# SHELL_CHOICES = UPDATE_CHOICES + ['mongodb', 'redis', 'bitcoin', 'bitcoin-testnet', 'addrindexrs', 'addrindexrs-testnet']
 
 CONFIGCHECK_FILES_BASE_EXTERNAL_BITCOIN = [
     ['addrindexrs', 'addrindexrs.env.default', 'addrindexrs.env'],
@@ -115,8 +116,8 @@ def parse_args():
     # parser_install.add_argument("config", choices=['base', 'base_extbtc', 'counterblock', 'full'], help="The name of the service configuration to utilize")
     # parser_install.add_argument("branch", choices=['master', 'develop'], help="The name of the git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags)")
     parser_install.add_argument("--use-ssh-uris", action="store_true", help="Use SSH URIs for source checkouts from Github, instead of HTTPS URIs")
-    parser_install.add_argument("--mongodb-interface", default="127.0.0.1",
-        help="Bind mongo to this host interface. Localhost by default, enter 0.0.0.0 for all host interfaces.")
+    # parser_install.add_argument("--mongodb-interface", default="127.0.0.1",
+    #     help="Bind mongo to this host interface. Localhost by default, enter 0.0.0.0 for all host interfaces.")
     parser_install.add_argument("--no-bootstrap", action="store_true", help="It doesn't download any bootstrap, so the parse will begin from scratch")
     
 
@@ -167,7 +168,7 @@ def parse_args():
 
     parser_rebuild = subparsers.add_parser('rebuild', help="rebuild fednode services (i.e. remove and refetch/install docker containers)")
     parser_rebuild.add_argument("services", nargs='*', default='', help="The name of the service or services to rebuild (or blank for all services)")
-    parser_rebuild.add_argument("--mongodb-interface", default="127.0.0.1")
+    # parser_rebuild.add_argument("--mongodb-interface", default="127.0.0.1")
     parser_rebuild.add_argument("--no-cache", action="store_true", help="Rebuilds service or services images from scratch before installing containers")
 
     parser_docker_clean = subparsers.add_parser('docker_clean', help="remove ALL docker containers and cached images (use with caution!)")
@@ -325,7 +326,7 @@ def main():
     repo_branch = config.get('Default', 'branch')
     os.environ['FEDNODE_RELEASE_TAG'] = 'latest' if repo_branch == 'master' else repo_branch
     os.environ['HOSTNAME_BASE'] = socket.gethostname()
-    os.environ['MONGODB_HOST_INTERFACE'] = getattr(args, 'mongodb_interface', "127.0.0.1")
+    # os.environ['MONGODB_HOST_INTERFACE'] = getattr(args, 'mongodb_interface', "127.0.0.1")
     os.environ["NO_BOOTSTRAP"] = "true"
     # os.environ["NO_BOOTSTRAP"] = "true" if hasattr(args, "no_bootstrap") and args.no_bootstrap else "false"
 
