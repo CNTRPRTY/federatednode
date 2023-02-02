@@ -1,2 +1,2 @@
 *.conf
-!redis/redis.conf
+# !redis/redis.conf
