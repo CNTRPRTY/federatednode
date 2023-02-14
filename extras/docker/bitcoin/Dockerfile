@@ -26,6 +26,10 @@ ENV HOME /root
 
 # install bitcoin core
 
+# ENV BITCOIN_VER="24.0.1"
+# ENV BITCOIN_FOLDER_VER="24.0.1"
+# ENV BITCOIN_SHASUM="49df6e444515d457ea0b885d66f521f2a26ca92ccf73d5296082e633544253bf"
+
 ENV BITCOIN_VER="0.21.1"
 ENV BITCOIN_FOLDER_VER="0.21.1"
 ENV BITCOIN_SHASUM="366eb44a7a0aa5bd342deea215ec19a184a11f2ca22220304ebb20b9c8917e2b"
@@ -38,7 +42,7 @@ ENV BITCOIN_SHASUM="366eb44a7a0aa5bd342deea215ec19a184a11f2ca22220304ebb20b9c891
 
 WORKDIR /tmp
 
-RUN wget -O bitcoin-${BITCOIN_VER}-x86_64-linux-gnu.tar.gz https://bitcoin.org/bin/bitcoin-core-${BITCOIN_VER}/bitcoin-${BITCOIN_VER}-x86_64-linux-gnu.tar.gz
+RUN wget -O bitcoin-${BITCOIN_VER}-x86_64-linux-gnu.tar.gz https://bitcoincore.org/bin/bitcoin-core-${BITCOIN_VER}/bitcoin-${BITCOIN_VER}-x86_64-linux-gnu.tar.gz
 
 RUN myhash=$(sha256sum "bitcoin-${BITCOIN_VER}-x86_64-linux-gnu.tar.gz" | cut -d' ' -f1); \
     if [ "$myhash" = "$BITCOIN_SHASUM" ] ; \
