@@ -420,7 +420,8 @@ def main():
             cmd = args.cmd
         else:
             cmd = '"{}"'.format(' '.join(args.cmd).replace('"', '\\"'))
-        os.system("{} docker exec -i -t federatednode_{}_1 bash -c {}".format(SUDO_CMD, args.service, cmd))
+        os.system("{} docker exec -i -t federatednode-{}-1 bash -c {}".format(SUDO_CMD, args.service, cmd))
+        # os.system("{} docker exec -i -t federatednode_{}_1 bash -c {}".format(SUDO_CMD, args.service, cmd))
     elif args.command == 'shell':
         container_running = is_container_running(args.service)
         if container_running:
