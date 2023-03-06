@@ -30,7 +30,7 @@ REPO_BASE_HTTPS = "https://github.com/CNTRPRTY/{}.git"
 # REPO_BASE_HTTPS = "https://github.com/CounterpartyXCP/{}.git"
 REPO_BASE_SSH = "git@github.com:CNTRPRTY/{}.git"
 # REPO_BASE_SSH = "git@github.com:CounterpartyXCP/{}.git"
-REPOS_BASE = ['counterparty-lib', 'addrindexrs']
+# REPOS_BASE = ['counterparty-lib', 'addrindexrs']
 
 HOST_PORTS_USED = {
     'base': [8332, 18332, 8432, 18432, 4000, 14000],
@@ -312,16 +312,40 @@ def main():
                 sys.exit(1)
 
         # check out the necessary source trees (don't use submodules due to detached HEAD and other problems)
-        REPOS = REPOS_BASE
-        for repo in REPOS:
-            repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
-            repo_dir = os.path.join(SCRIPTDIR, "src", repo)
-            if not os.path.exists(repo_dir):
-                git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
-                if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
-                    os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
-                else:
-                    os.system(git_cmd)
+
+        # first addrindexrs
+        repo = 'addrindexrs'
+        repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
+        repo_dir = os.path.join(SCRIPTDIR, "src", repo)
+        if not os.path.exists(repo_dir):
+            git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
+            if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
+                os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
+            else:
+                os.system(git_cmd)
+
+        # then counterparty-lib
+        repo = 'counterparty-lib'
+        repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
+        repo_dir = os.path.join(SCRIPTDIR, "src", repo)
+        if not os.path.exists(repo_dir):
+            git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
+            if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
+                os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
+            else:
+                os.system(git_cmd)
+
+        # # check out the necessary source trees (don't use submodules due to detached HEAD and other problems)
+        # REPOS = REPOS_BASE
+        # for repo in REPOS:
+        #     repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
+        #     repo_dir = os.path.join(SCRIPTDIR, "src", repo)
+        #     if not os.path.exists(repo_dir):
+        #         git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
+        #         if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
+        #             os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
+        #         else:
+        #             os.system(git_cmd)
 
         # make sure we have the newest image for each service
         if use_docker_pulls:
