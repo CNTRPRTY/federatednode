@@ -31,37 +31,22 @@ REPO_BASE_HTTPS = "https://github.com/CNTRPRTY/{}.git"
 REPO_BASE_SSH = "git@github.com:CNTRPRTY/{}.git"
 # REPO_BASE_SSH = "git@github.com:CounterpartyXCP/{}.git"
 REPOS_BASE = ['counterparty-lib', 'addrindexrs']
-# REPOS_BASE = ['counterparty-lib', 'counterparty-cli', 'addrindexrs']
-# REPOS_COUNTERBLOCK = REPOS_BASE + ['counterblock', ]
-# REPOS_FULL = REPOS_BASE + ['armory-utxsvr', 'xcp-proxy']
-# REPOS_FULL = REPOS_COUNTERBLOCK + ['counterwallet', 'armory-utxsvr', 'xcp-proxy']
 
 HOST_PORTS_USED = {
     'base': [8332, 18332, 8432, 18432, 4000, 14000],
     'base_extbtc': [8432, 18432, 4000, 14000],
-    # 'counterblock': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 27017],
-    # 'full': [8332, 18332, 8432, 18432, 4000, 14000, 4100, 14100, 80, 443, 27017]
 }
 VOLUMES_USED = {
     'base': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data'],
     'base_extbtc': ['addrindexrs-data', 'counterparty-data'],
-    # 'counterblock': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data'],
-    # 'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
-    # 'full': ['bitcoin-data', 'addrindexrs-data', 'counterparty-data', 'counterblock-data', 'mongodb-data', 'armory-data', 'xcp-proxy']
 }
 UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
                   'counterparty', 'counterparty-testnet']
-# UPDATE_CHOICES = ['addrindexrs', 'addrindexrs-testnet',
-#                   'counterparty', 'counterparty-testnet', 'counterblock',
-#                   'counterblock-testnet', 'counterwallet', 'armory-utxsvr',
-#                   'armory-utxsvr-testnet', 'xcp-proxy', 'xcp-proxy-testnet']
 REPARSE_CHOICES = ['counterparty', 'counterparty-testnet']
-# REPARSE_CHOICES = ['counterparty', 'counterparty-testnet', 'counterblock', 'counterblock-testnet']
 ROLLBACK_CHOICES = ['counterparty', 'counterparty-testnet']
 VALIDATE_CHOICES = ['counterparty', 'counterparty-testnet']
 VACUUM_CHOICES = ['counterparty', 'counterparty-testnet']
 SHELL_CHOICES = UPDATE_CHOICES + ['bitcoin', 'bitcoin-testnet', 'addrindexrs', 'addrindexrs-testnet']
-# SHELL_CHOICES = UPDATE_CHOICES + ['mongodb', 'redis', 'bitcoin', 'bitcoin-testnet', 'addrindexrs', 'addrindexrs-testnet']
 
 CONFIGCHECK_FILES_BASE_EXTERNAL_BITCOIN = [
     ['addrindexrs', 'addrindexrs.env.default', 'addrindexrs.env'],
@@ -81,17 +66,9 @@ CONFIGCHECK_FILES_BASE = [
     ['counterparty', 'server.conf.default', 'server.conf'],
     ['counterparty', 'server.testnet.conf.default', 'server.testnet.conf'],
 ];
-# CONFIGCHECK_FILES_COUNTERBLOCK = CONFIGCHECK_FILES_BASE + [
-#     ['counterblock', 'server.conf.default', 'server.conf'],
-#     ['counterblock', 'server.testnet.conf.default', 'server.testnet.conf'],
-# ]
-# CONFIGCHECK_FILES_FULL = CONFIGCHECK_FILES_BASE;
-# CONFIGCHECK_FILES_FULL = CONFIGCHECK_FILES_COUNTERBLOCK;
 CONFIGCHECK_FILES = {
     'base_extbtc': CONFIGCHECK_FILES_BASE_EXTERNAL_BITCOIN,
     'base': CONFIGCHECK_FILES_BASE,
-    # 'counterblock': CONFIGCHECK_FILES_COUNTERBLOCK,
-    # 'full': CONFIGCHECK_FILES_FULL,
 }
 # set in setup_env()
 IS_WINDOWS = None
@@ -113,11 +90,7 @@ def parse_args():
     parser_install = subparsers.add_parser('install', help="install fednode services")
     parser_install.add_argument("config", nargs="?", default="base", choices=['base', 'base_extbtc'], help="The name of the service configuration to utilize")
     parser_install.add_argument("branch", nargs="?", default="master", choices=['master', 'develop'], help="The name of the git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags)")
-    # parser_install.add_argument("config", choices=['base', 'base_extbtc', 'counterblock', 'full'], help="The name of the service configuration to utilize")
-    # parser_install.add_argument("branch", choices=['master', 'develop'], help="The name of the git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags)")
     parser_install.add_argument("--use-ssh-uris", action="store_true", help="Use SSH URIs for source checkouts from Github, instead of HTTPS URIs")
-    # parser_install.add_argument("--mongodb-interface", default="127.0.0.1",
-    #     help="Bind mongo to this host interface. Localhost by default, enter 0.0.0.0 for all host interfaces.")
     parser_install.add_argument("--no-bootstrap", action="store_true", help="It doesn't download any bootstrap, so the parse will begin from scratch")
     
 
@@ -133,7 +106,6 @@ def parse_args():
     parser_restart.add_argument("services", nargs='*', default='', help="The service or services to restart (or blank for all services)")
 
     parser_reparse = subparsers.add_parser('reparse', help="reparse a counterparty-server service")
-    # parser_reparse = subparsers.add_parser('reparse', help="reparse a counterparty-server or counterblock service")
     parser_reparse.add_argument("service", choices=REPARSE_CHOICES, help="The name of the service for which to kick off a reparse")
 
     parser_rollback = subparsers.add_parser('rollback', help="rollback a counterparty-server")
@@ -168,7 +140,6 @@ def parse_args():
 
     parser_rebuild = subparsers.add_parser('rebuild', help="rebuild fednode services (i.e. remove and refetch/install docker containers)")
     parser_rebuild.add_argument("services", nargs='*', default='', help="The name of the service or services to rebuild (or blank for all services)")
-    # parser_rebuild.add_argument("--mongodb-interface", default="127.0.0.1")
     parser_rebuild.add_argument("--no-cache", action="store_true", help="Rebuilds service or services images from scratch before installing containers")
 
     parser_docker_clean = subparsers.add_parser('docker_clean', help="remove ALL docker containers and cached images (use with caution!)")
@@ -326,9 +297,7 @@ def main():
     repo_branch = config.get('Default', 'branch')
     os.environ['FEDNODE_RELEASE_TAG'] = 'latest' if repo_branch == 'master' else repo_branch
     os.environ['HOSTNAME_BASE'] = socket.gethostname()
-    # os.environ['MONGODB_HOST_INTERFACE'] = getattr(args, 'mongodb_interface', "127.0.0.1")
     os.environ["NO_BOOTSTRAP"] = "true"
-    # os.environ["NO_BOOTSTRAP"] = "true" if hasattr(args, "no_bootstrap") and args.no_bootstrap else "false"
 
     # perform action for the specified command
     if args.command == 'install':
@@ -344,7 +313,6 @@ def main():
 
         # check out the necessary source trees (don't use submodules due to detached HEAD and other problems)
         REPOS = REPOS_BASE
-        # REPOS = REPOS_BASE if build_config == 'base' else (REPOS_COUNTERBLOCK if build_config == 'counterblock' else REPOS_FULL)
         for repo in REPOS:
             repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
             repo_dir = os.path.join(SCRIPTDIR, "src", repo)
@@ -466,24 +434,12 @@ def main():
 
                     # delete installed egg (to force egg recreate and deps re-check on next start)
                     if service_base in ('counterparty'):
-                    # if service_base in ('counterparty', 'counterblock', 'armory-utxsvr'):
                         for path in glob.glob(os.path.join(service_dir_path, "*.egg-info")):
                             print("Removing egg path {}".format(path))
                             if not IS_WINDOWS:  # have to use root
                                 os.system("{} bash -c \"rm -rf {}\"".format(SUDO_CMD, path))
                             else:
                                 shutil.rmtree(path)
-
-                # if service_base == 'counterwallet' and os.path.exists(os.path.join(SCRIPTDIR, "src", "counterwallet")):  # special case
-                #     transifex_cfg_path = os.path.join(os.path.expanduser("~"), ".transifex")
-                #     if os.path.exists(transifex_cfg_path):
-                #         os.system("{} docker cp {} federatednode_counterwallet_1:/root/.transifex".format(SUDO_CMD, transifex_cfg_path))
-                #     os.system("{} docker exec -i -t federatednode_counterwallet_1 bash -c \"cd /counterwallet/src ".format(SUDO_CMD) +
-                #               "&& bower --allow-root update && cd /counterwallet && npm update && grunt build\"")
-                #     if not os.path.exists(transifex_cfg_path):
-                #         print("NOTE: Did not update locales because there is no .transifex file in your home directory")
-                #         print("If you want locales compiled, sign up for transifex and create this file to" +
-                #               " contain 'your_transifex_username:your_transifex_password'")
 
             # and restart container
             if not args.no_restart:
