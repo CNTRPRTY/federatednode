@@ -89,11 +89,10 @@ def parse_args():
 
     parser_install = subparsers.add_parser('install', help="install fednode services")
     parser_install.add_argument("config", nargs="?", default="base", choices=['base', 'base_extbtc'], help="The name of the service configuration to utilize")
-    parser_install.add_argument("branch", nargs="?", default="master", choices=['master', 'develop'], help="The name of the git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags)")
+    parser_install.add_argument("branch", nargs="?", default="master", choices=['master', 'develop'], help="The name of the counterparty-lib git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags (note this might not be relevant any more TODO))")
     parser_install.add_argument("--use-ssh-uris", action="store_true", help="Use SSH URIs for source checkouts from Github, instead of HTTPS URIs")
     parser_install.add_argument("--no-bootstrap", action="store_true", help="It doesn't download any bootstrap, so the parse will begin from scratch")
     
-
     parser_uninstall = subparsers.add_parser('uninstall', help="uninstall fednode services")
 
     parser_start = subparsers.add_parser('start', help="start fednode services")
@@ -295,7 +294,7 @@ def main():
     docker_config_file = "docker-compose.{}.yml".format(build_config)
     DOCKER_CONFIG_PATH = os.path.join(SCRIPTDIR, docker_config_file)
     repo_branch = config.get('Default', 'branch')
-    os.environ['FEDNODE_RELEASE_TAG'] = 'latest' if repo_branch == 'master' else repo_branch
+    os.environ['FEDNODE_RELEASE_TAG'] = 'latest' if repo_branch == 'master' else repo_branch # TODO why FEDNODE?
     os.environ['HOSTNAME_BASE'] = socket.gethostname()
     os.environ["NO_BOOTSTRAP"] = "true"
 
@@ -318,7 +317,7 @@ def main():
         repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
         repo_dir = os.path.join(SCRIPTDIR, "src", repo)
         if not os.path.exists(repo_dir):
-            git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
+            git_cmd = "git clone -b {} {} {}".format('master', repo_url, repo_dir)
             if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
                 os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
             else:
