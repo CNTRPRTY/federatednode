@@ -89,7 +89,7 @@ def parse_args():
 
     parser_install = subparsers.add_parser('install', help="install fednode services")
     parser_install.add_argument("config", nargs="?", default="base", choices=['base', 'base_extbtc'], help="The name of the service configuration to utilize")
-    parser_install.add_argument("branch", nargs="?", default="master", choices=['master', 'master-959ro', 'develop'], help="The name of the counterparty-lib git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags (note this might not be relevant any more TODO))")
+    parser_install.add_argument("branch", nargs="?", default="master", choices=['master', 'master-9597', 'master-959ro', 'develop'], help="The name of the counterparty-lib git branch to utilize for the build (note that 'master' pulls the docker 'latest' tags (note this might not be relevant any more TODO))")
     parser_install.add_argument("--use-ssh-uris", action="store_true", help="Use SSH URIs for source checkouts from Github, instead of HTTPS URIs")
     parser_install.add_argument("--no-bootstrap", action="store_true", help="It doesn't download any bootstrap, so the parse will begin from scratch")
     
