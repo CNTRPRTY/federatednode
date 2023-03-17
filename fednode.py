@@ -194,7 +194,8 @@ def setup_env():
 
 def is_container_running(service, abort_on_not_exist=True):
     try:
-        container_running = subprocess.check_output('{} docker inspect --format="{{{{ .State.Running }}}}" federatednode_{}_1'.format(SUDO_CMD, service), shell=True).decode("utf-8").strip()
+        container_running = subprocess.check_output('{} docker inspect --format="{{{{ .State.Running }}}}" federatednode-{}-1'.format(SUDO_CMD, service), shell=True).decode("utf-8").strip()
+        # container_running = subprocess.check_output('{} docker inspect --format="{{{{ .State.Running }}}}" federatednode_{}_1'.format(SUDO_CMD, service), shell=True).decode("utf-8").strip()
         container_running = container_running == 'true'
     except subprocess.CalledProcessError:
         container_running = None
@@ -417,7 +418,8 @@ def main():
     elif args.command == 'shell':
         container_running = is_container_running(args.service)
         if container_running:
-            os.system("{} docker exec -i -t federatednode_{}_1 bash".format(SUDO_CMD, args.service))
+            os.system("{} docker exec -i -t federatednode-{}-1 bash".format(SUDO_CMD, args.service))
+            # os.system("{} docker exec -i -t federatednode_{}_1 bash".format(SUDO_CMD, args.service))
         else:
             print("Container is not running -- creating a transient container with a 'bash' shell entrypoint...")
             run_compose_cmd("run --no-deps --rm --entrypoint bash {}".format(args.service))
