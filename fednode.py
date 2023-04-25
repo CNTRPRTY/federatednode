@@ -18,7 +18,7 @@ import difflib
 from datetime import datetime, timezone
 
 
-VERSION="2.3.0"
+VERSION="3.0.0"
 
 PROJECT_NAME = "federatednode"
 CURDIR = os.getcwd()
