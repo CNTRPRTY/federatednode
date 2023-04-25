@@ -71,7 +71,7 @@ CONFIGCHECK_FILES = {
     'base': CONFIGCHECK_FILES_BASE,
 }
 # set in setup_env()
-IS_WINDOWS = None
+# IS_WINDOWS = None
 SESSION_USER = None
 SUDO_CMD = None
 # set in main()
@@ -168,22 +168,27 @@ def is_port_open(port):
 
 
 def setup_env():
-    global IS_WINDOWS
+    # global IS_WINDOWS
     global SESSION_USER
     global SUDO_CMD
-    if os.name != 'nt':
-        IS_WINDOWS = False
-        SESSION_USER = subprocess.check_output("logname", shell=True).decode("utf-8").strip()
-        assert SESSION_USER
-        SUDO_CMD = "sudo -E"
-        IS_SUDO_ACTIVE = subprocess.check_output('sudo -n uptime 2>&1|grep "load"|wc -l', shell=True).decode("utf-8").strip() == "1"
-    else:
-        IS_WINDOWS = True
-        SESSION_USER = None
-        SUDO_CMD = ''
-        IS_SUDO_ACTIVE = True
+    # if os.name != 'nt':
+    # IS_WINDOWS = False
+    SESSION_USER = subprocess.check_output("logname", shell=True).decode("utf-8").strip()
+    assert SESSION_USER
+    SUDO_CMD = "sudo -E"
+    IS_SUDO_ACTIVE = subprocess.check_output('sudo -n uptime 2>&1|grep "load"|wc -l', shell=True).decode("utf-8").strip() == "1"
+    # else:
+    #     IS_WINDOWS = True
+    #     SESSION_USER = None
+    #     SUDO_CMD = ''
+    #     IS_SUDO_ACTIVE = True
 
-    if os.name != 'nt' and os.geteuid() == 0:
+    if os.name == 'nt':
+        print("Windows is not supported.")
+        sys.exit(1)
+
+    if os.geteuid() == 0:
+        # if os.name != 'nt' and os.geteuid() == 0:
         print("Please run this script as a non-root user.")
         sys.exit(1)
 
@@ -319,10 +324,10 @@ def main():
         repo_dir = os.path.join(SCRIPTDIR, "src", repo)
         if not os.path.exists(repo_dir):
             git_cmd = "git clone -b {} {} {}".format('master', repo_url, repo_dir)
-            if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
-                os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
-            else:
-                os.system(git_cmd)
+            # if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
+            os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
+            # else:
+            #     os.system(git_cmd)
 
         # then counterparty-lib
         repo = 'counterparty-lib'
@@ -330,10 +335,10 @@ def main():
         repo_dir = os.path.join(SCRIPTDIR, "src", repo)
         if not os.path.exists(repo_dir):
             git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
-            if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
-                os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
-            else:
-                os.system(git_cmd)
+            # if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
+            os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
+            # else:
+            #     os.system(git_cmd)
 
         # # check out the necessary source trees (don't use submodules due to detached HEAD and other problems)
         # REPOS = REPOS_BASE
@@ -361,22 +366,22 @@ def main():
                 print("Generating config from defaults at {} ...".format(active_config))
                 shutil.copy2(default_config, active_config)
                 default_config_stat = os.stat(default_config)
-                if not IS_WINDOWS:
-                    os.chown(active_config, default_config_stat.st_uid, default_config_stat.st_gid)
+                # if not IS_WINDOWS:
+                os.chown(active_config, default_config_stat.st_uid, default_config_stat.st_gid)
 
         # create symlinks to the data volumes (for ease of use)
-        if not IS_WINDOWS:
-            data_dir = os.path.join(SCRIPTDIR, "data")
-            if not os.path.exists(data_dir):
-                os.mkdir(data_dir)
+        # if not IS_WINDOWS:
+        data_dir = os.path.join(SCRIPTDIR, "data")
+        if not os.path.exists(data_dir):
+            os.mkdir(data_dir)
 
-            for volume in VOLUMES_USED[build_config]:
-                symlink_path = os.path.join(data_dir, volume.replace('-data', ''))
-                volume_name = "{}_{}".format(PROJECT_NAME, volume)
-                mountpoint_path = get_docker_volume_path(volume_name)
-                if mountpoint_path is not None and not os.path.lexists(symlink_path):
-                    os.symlink(mountpoint_path, symlink_path)
-                    print("For convenience, symlinking {} to {}".format(mountpoint_path, symlink_path))
+        for volume in VOLUMES_USED[build_config]:
+            symlink_path = os.path.join(data_dir, volume.replace('-data', ''))
+            volume_name = "{}_{}".format(PROJECT_NAME, volume)
+            mountpoint_path = get_docker_volume_path(volume_name)
+            if mountpoint_path is not None and not os.path.lexists(symlink_path):
+                os.symlink(mountpoint_path, symlink_path)
+                print("For convenience, symlinking {} to {}".format(mountpoint_path, symlink_path))
 
         # launch
         run_compose_cmd("up -d")
@@ -452,19 +457,19 @@ def main():
                         print("Unknown service git branch name, or repo in detached state")
                         sys.exit(1)
                     git_cmd = "cd {}; git pull origin {}; cd {}".format(service_dir_path, service_branch, CURDIR)
-                    if not IS_WINDOWS:  # make sure to update the code as the original user, so the permissions are right
-                        os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
-                    else:
-                        os.system(git_cmd)
+                    # if not IS_WINDOWS:  # make sure to update the code as the original user, so the permissions are right
+                    os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
+                    # else:
+                    #     os.system(git_cmd)
 
                     # delete installed egg (to force egg recreate and deps re-check on next start)
                     if service_base in ('counterparty'):
                         for path in glob.glob(os.path.join(service_dir_path, "*.egg-info")):
                             print("Removing egg path {}".format(path))
-                            if not IS_WINDOWS:  # have to use root
-                                os.system("{} bash -c \"rm -rf {}\"".format(SUDO_CMD, path))
-                            else:
-                                shutil.rmtree(path)
+                            # if not IS_WINDOWS:  # have to use root
+                            os.system("{} bash -c \"rm -rf {}\"".format(SUDO_CMD, path))
+                            # else:
+                            #     shutil.rmtree(path)
 
             # and restart container
             if not args.no_restart:
