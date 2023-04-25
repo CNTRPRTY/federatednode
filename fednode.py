@@ -30,7 +30,6 @@ REPO_BASE_HTTPS = "https://github.com/CNTRPRTY/{}.git"
 # REPO_BASE_HTTPS = "https://github.com/CounterpartyXCP/{}.git"
 REPO_BASE_SSH = "git@github.com:CNTRPRTY/{}.git"
 # REPO_BASE_SSH = "git@github.com:CounterpartyXCP/{}.git"
-# REPOS_BASE = ['counterparty-lib', 'addrindexrs']
 
 HOST_PORTS_USED = {
     'base': [8332, 18332, 8432, 18432, 4000, 14000],
@@ -71,7 +70,6 @@ CONFIGCHECK_FILES = {
     'base': CONFIGCHECK_FILES_BASE,
 }
 # set in setup_env()
-# IS_WINDOWS = None
 SESSION_USER = None
 SUDO_CMD = None
 # set in main()
@@ -158,7 +156,6 @@ def run_compose_cmd(cmd):
     assert DOCKER_CONFIG_PATH
     assert os.environ['FEDNODE_RELEASE_TAG']
     return os.system("{} docker compose -f {} -p {} {}".format(SUDO_CMD, DOCKER_CONFIG_PATH, PROJECT_NAME, cmd))
-    # return os.system("{} docker-compose -f {} -p {} {}".format(SUDO_CMD, DOCKER_CONFIG_PATH, PROJECT_NAME, cmd))
 
 
 def is_port_open(port):
@@ -168,27 +165,18 @@ def is_port_open(port):
 
 
 def setup_env():
-    # global IS_WINDOWS
     global SESSION_USER
     global SUDO_CMD
-    # if os.name != 'nt':
-    # IS_WINDOWS = False
     SESSION_USER = subprocess.check_output("logname", shell=True).decode("utf-8").strip()
     assert SESSION_USER
     SUDO_CMD = "sudo -E"
     IS_SUDO_ACTIVE = subprocess.check_output('sudo -n uptime 2>&1|grep "load"|wc -l', shell=True).decode("utf-8").strip() == "1"
-    # else:
-    #     IS_WINDOWS = True
-    #     SESSION_USER = None
-    #     SUDO_CMD = ''
-    #     IS_SUDO_ACTIVE = True
 
     if os.name == 'nt':
         print("Windows is not supported.")
         sys.exit(1)
 
     if os.geteuid() == 0:
-        # if os.name != 'nt' and os.geteuid() == 0:
         print("Please run this script as a non-root user.")
         sys.exit(1)
 
@@ -200,7 +188,6 @@ def setup_env():
 def is_container_running(service, abort_on_not_exist=True):
     try:
         container_running = subprocess.check_output('{} docker inspect --format="{{{{ .State.Running }}}}" federatednode-{}-1'.format(SUDO_CMD, service), shell=True).decode("utf-8").strip()
-        # container_running = subprocess.check_output('{} docker inspect --format="{{{{ .State.Running }}}}" federatednode_{}_1'.format(SUDO_CMD, service), shell=True).decode("utf-8").strip()
         container_running = container_running == 'true'
     except subprocess.CalledProcessError:
         container_running = None
@@ -324,10 +311,7 @@ def main():
         repo_dir = os.path.join(SCRIPTDIR, "src", repo)
         if not os.path.exists(repo_dir):
             git_cmd = "git clone -b {} {} {}".format('master', repo_url, repo_dir)
-            # if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
             os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
-            # else:
-            #     os.system(git_cmd)
 
         # then counterparty-lib
         repo = 'counterparty-lib'
@@ -335,22 +319,7 @@ def main():
         repo_dir = os.path.join(SCRIPTDIR, "src", repo)
         if not os.path.exists(repo_dir):
             git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
-            # if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
             os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
-            # else:
-            #     os.system(git_cmd)
-
-        # # check out the necessary source trees (don't use submodules due to detached HEAD and other problems)
-        # REPOS = REPOS_BASE
-        # for repo in REPOS:
-        #     repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
-        #     repo_dir = os.path.join(SCRIPTDIR, "src", repo)
-        #     if not os.path.exists(repo_dir):
-        #         git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
-        #         if not IS_WINDOWS:  # make sure to check out the code as the original user, so the permissions are right
-        #             os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
-        #         else:
-        #             os.system(git_cmd)
 
         # make sure we have the newest image for each service
         if use_docker_pulls:
@@ -366,11 +335,9 @@ def main():
                 print("Generating config from defaults at {} ...".format(active_config))
                 shutil.copy2(default_config, active_config)
                 default_config_stat = os.stat(default_config)
-                # if not IS_WINDOWS:
                 os.chown(active_config, default_config_stat.st_uid, default_config_stat.st_gid)
 
         # create symlinks to the data volumes (for ease of use)
-        # if not IS_WINDOWS:
         data_dir = os.path.join(SCRIPTDIR, "data")
         if not os.path.exists(data_dir):
             os.mkdir(data_dir)
@@ -412,19 +379,16 @@ def main():
         run_compose_cmd("logs {}".format(' '.join(args.services)))
     elif args.command == 'ps':
         run_compose_cmd("ps --all")
-        # run_compose_cmd("ps")
     elif args.command == 'exec':
         if len(args.cmd) == 1 and re.match("['\"].*?['\"]", args.cmd[0]):
             cmd = args.cmd
         else:
             cmd = '"{}"'.format(' '.join(args.cmd).replace('"', '\\"'))
         os.system("{} docker exec -i -t federatednode-{}-1 bash -c {}".format(SUDO_CMD, args.service, cmd))
-        # os.system("{} docker exec -i -t federatednode_{}_1 bash -c {}".format(SUDO_CMD, args.service, cmd))
     elif args.command == 'shell':
         container_running = is_container_running(args.service)
         if container_running:
             os.system("{} docker exec -i -t federatednode-{}-1 bash".format(SUDO_CMD, args.service))
-            # os.system("{} docker exec -i -t federatednode_{}_1 bash".format(SUDO_CMD, args.service))
         else:
             print("Container is not running -- creating a transient container with a 'bash' shell entrypoint...")
             run_compose_cmd("run --no-deps --rm --entrypoint bash {}".format(args.service))
@@ -457,19 +421,13 @@ def main():
                         print("Unknown service git branch name, or repo in detached state")
                         sys.exit(1)
                     git_cmd = "cd {}; git pull origin {}; cd {}".format(service_dir_path, service_branch, CURDIR)
-                    # if not IS_WINDOWS:  # make sure to update the code as the original user, so the permissions are right
                     os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
-                    # else:
-                    #     os.system(git_cmd)
 
                     # delete installed egg (to force egg recreate and deps re-check on next start)
                     if service_base in ('counterparty'):
                         for path in glob.glob(os.path.join(service_dir_path, "*.egg-info")):
                             print("Removing egg path {}".format(path))
-                            # if not IS_WINDOWS:  # have to use root
                             os.system("{} bash -c \"rm -rf {}\"".format(SUDO_CMD, path))
-                            # else:
-                            #     shutil.rmtree(path)
 
             # and restart container
             if not args.no_restart:
