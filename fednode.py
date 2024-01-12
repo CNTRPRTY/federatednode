@@ -326,7 +326,7 @@ def main():
         repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
         repo_dir = os.path.join(SCRIPTDIR, "src", repo)
         if not os.path.exists(repo_dir):
-            git_cmd = "git clone -b {} {} {}".format('master', repo_url, repo_dir)
+            git_cmd = "git clone -b {} {} {}".format('main', repo_url, repo_dir)
             os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
 
         # make sure we have the newest image for each service
