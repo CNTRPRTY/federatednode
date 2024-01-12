@@ -321,6 +321,14 @@ def main():
             git_cmd = "git clone -b {} {} {}".format(repo_branch, repo_url, repo_dir)
             os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
 
+        # then the explorer
+        repo = 'xcpdev-ssr'
+        repo_url = REPO_BASE_SSH.format(repo) if args.use_ssh_uris else REPO_BASE_HTTPS.format(repo)
+        repo_dir = os.path.join(SCRIPTDIR, "src", repo)
+        if not os.path.exists(repo_dir):
+            git_cmd = "git clone -b {} {} {}".format('master', repo_url, repo_dir)
+            os.system("{} -u {} bash -c \"{}\"".format(SUDO_CMD, SESSION_USER, git_cmd))
+
         # make sure we have the newest image for each service
         if use_docker_pulls:
             run_compose_cmd("pull --ignore-pull-failures")

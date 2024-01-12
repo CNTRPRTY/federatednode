@@ -112,3 +112,19 @@ services:
       - PARAMS=--config-file=/root/.config/counterparty/server.testnet.conf
       - BTC_NETWORK=testnet
       - NO_BOOTSTRAP=${NO_BOOTSTRAP}
+
+  xcpdev-ssr-base:
+    build:
+      context: ./src/xcpdev-ssr
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "30m"
+        max-file: "50"
+
+  xcpdev-ssr-base-mainnet:
+    hostname: ${HOSTNAME_BASE}-xdssr
+    extends:
+      service: xcpdev-ssr-base
+    ports:
+      - "3000:3000"

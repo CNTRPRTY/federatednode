@@ -37,6 +37,14 @@ services:
       - bitcoin-testnet
       - addrindexrs-testnet
 
+  xcpdev-ssr:
+    extends:
+      file: docker-compose.tmpl.yml
+      service: xcpdev-ssr-base-mainnet
+    links:
+      - bitcoin
+      - addrindexrs
+
 volumes:
   bitcoin-data:
   addrindexrs-data:
