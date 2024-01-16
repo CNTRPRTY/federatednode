@@ -42,8 +42,7 @@ services:
       file: docker-compose.tmpl.yml
       service: xcpdev-ssr-base-mainnet
     links:
-      - bitcoin
-      - addrindexrs
+      - counterparty
 
 volumes:
   bitcoin-data:
