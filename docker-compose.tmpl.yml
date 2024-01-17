@@ -89,7 +89,7 @@ services:
       options:
         max-size: "30m"
         max-file: "50"
-    # restart: "unless-stopped"    
+    restart: "unless-stopped"
 
   counterparty-base-mainnet:
     hostname: ${HOSTNAME_BASE}-cp
